@@ -1,0 +1,162 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Please login</title>
+        <link type="text/css" rel="stylesheet" href="//fonts.googleapis.com/css?family=Rokkitt:400,700|Oswald:400,300,700&amp;ndrrca" media="all" />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <!-- userLayoutHead() start -->
+
+
+<meta name="generator" content="aMember Pro" >
+<link href="/application/default/views/public/css/reset.css?1202787669" media="screen" rel="stylesheet" type="text/css" >
+<link href="/application/default/views/public/css/amember.css?1202787669" media="screen" rel="stylesheet" type="text/css" >
+<link href="/application/default/views/public/css/compat.css?1202787669" media="screen" rel="stylesheet" type="text/css" >
+<link href="https://use.fontawesome.com/releases/v5.15.1/css/all.css" media="screen" rel="stylesheet" type="text/css" >
+<link href="/public/theme/css/theme.css" media="screen" rel="stylesheet" type="text/css" >
+<link href="/application/default/views/public/js/jquery/jquery.ui.css?1202787669" media="screen" rel="stylesheet" type="text/css" >
+
+<script type="text/am-vars">{"public-path":"\/","api-url":"\/","datepickerDefaults":{"closeText":"Done","prevText":"Prev","nextText":"Next","currentText":"Today","monthNames":["January","February","March","April","May","June","July","August","September","October","November","December"],"monthNamesShort":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]},"langCount":0}</script>
+
+<script type="text/javascript">
+    //<!--
+    window.uiDateFormat = "mm\/dd\/y";
+window.momentDateFormat = "MM\/DD\/YY";
+window.uiDefaultDate = new Date(2023,5,5);
+    //-->
+</script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script type="text/javascript" src="/application/default/views/public/js/vendors-admin-user.js?1202787669"></script>
+<script type="text/javascript" src="/application/default/views/public/js/vendors-user.js?1202787669"></script>
+<script type="text/javascript" src="/application/default/views/public/js/user.js?1202787669"></script>
+<script type="text/javascript">
+    //<!--
+    am_i18n = {"toggle_password_visibility":"Toggle Password Visibility","password_strength":"Password Strength","upload_browse":"browse","upload_upload":"upload","upload_files":"Uploaded Files","upload_uploading":"Uploading...","ms_please_select":"-- Please Select --","ms_select_all":"Select All","please_wait":"Please Wait...","file_style_browse":"Browse\u2026"};    //-->
+</script>
+<script type="text/javascript">
+    //<!--
+    window.rootUrl = ""; //kept for compatibilty only! use amUrl() instead
+function amUrl(u, return_path) {
+    var ret = "" + u;
+    return (return_path || 0) ? [ret, []] : ret;
+};    //-->
+</script>
+
+
+<!-- userLayoutHead() finish -->
+    
+</head>
+    <body>
+                <div class="am-layout"><div class="contentcenter">
+            <div class="am-header"> </div>
+            <div class="am-body">
+                <div class="am-body-content-wrapper am-main">
+                <div id="f4w-banner">
+<div id="logo-box"><a href=""> <img src="/application/default/themes/f4w/public/img/logo-am.png"/></a></div>
+
+</div><!-- end f4w-title -->
+
+
+</div><!-- end f4w-banner -->
+                
+                    <div class="am-body-content">
+                                                                                            <h1>Please login</h1>
+                                                <!-- content starts here -->
+                        <div class="am-login-form-wrapper">
+        <div class="am-form am-login-form" style="margin: 0 auto">
+        <form name="login" method="post" action='/login'>
+            <fieldset>
+                <legend>Member Login</legend>
+                <div class="row" id="recaptcha-row" style="display: none;" data-recaptcha-theme="light">
+                    <div class="element-title" style="display:none;"></div>
+                    <div class="element am-element-recaptcha" id="recaptcha-element">
+                                            </div>
+                </div>
+                <div class="row">
+                    <div class="element-title">
+                        <label class="element-title" for="login">E-Mail Address or Username</label>
+                    </div>
+                    <div class="element">
+                        <input type="text" id="login" name="amember_login" size="15" value="" autofocus="autofocus"  placeholder="Email or Username" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="element-title">
+                        <label class="element-title" for="pass">Password</label>
+                    </div>
+                    <div class="element">
+                        <input type="password" id="pass" name="amember_pass" size="15" placeholder="Password" />
+                    </div>
+                </div>
+                                <div class="row">
+                    <div class="element-title">
+                        <label class="element-title" for="remember">Remember my password?</label>
+                    </div>
+                    <div class="element">
+                        <input type="checkbox" name="remember_login" value="1">
+                    </div>
+                </div>
+                                <div class="row">
+                    <div class="element">
+                        <input type="submit" value="Login" />
+                        <a href="javascript:;" class="local-link am-form-login-switch">Forgot password?</a>
+                    </div>
+                </div>
+            </fieldset>
+            <input type="hidden" name="login_attempt_id" value="1685995734" />
+<input type="hidden" name="amember_redirect_url" value="https://media001.f4wonline.com/dmdocuments/052723wol.mp3?" />
+<input type="hidden" name="_referer" value="https://archive.f4wonline.com/" />
+        </form>
+    </div>
+    </div>
+<div class="am-sendpass-form-wrapper">
+    <div class="am-form am-sendpass-form">
+        <form name="sendpass" method="post" action="/sendpass">
+            <fieldset>
+                <legend>Lost password?</legend>
+                <div class="row">
+                    <div class="element-title">
+                        <label for="sendpass">Enter your E-Mail Address or Username</label>
+                    </div>
+                    <div class="element"><input type="text" name="login" id="sendpass" size="15" placeholder="Email or Username" /></div>
+                </div>
+                <div class="row">
+                    <div class="element">
+                        <input type="submit" value="Get Password" />
+                        <a href="javascript:;" class="local-link am-form-login-switch">I have password</a>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>
+<script type="text/javascript">
+jQuery('.am-form-login-switch').click(function(){
+    jQuery('.am-login-form-wrapper, .am-sendpass-form-wrapper').toggle();
+    jQuery('.am-login-form-wrapper .errors, .am-sendpass-form-wrapper .errors').remove();
+})
+</script>
+<div class="banner-container hide-member"><div class="digital-access"><div class="left-home">Digital Online Access:</div> <div class="members-perks">New newsletters every week, 10 to 15 downloadable radio shows and thousands of archived shows and hundreds of archived newsletters.  <b>As low as $9.99 per month.</b></div><div class="payment-icons"><img src="/images/paypal-icons.png" alt="paypal icons"/></div><div class="checkoutbutton right-button"><a href="http://members.f4wonline.com/amember/signup"><span id="signup-text"><a href="/signup">Subscribe <br />now!</a></span></a></div></div></div>
+
+<div class="banner-container"><div class="home-delivery"><div class="left-home">Figure Four Online Video Podcasts (video only): $8/month </div><div class="cash-home">Credit, cash, check, or money order.</div><div class="payment-icons"><img src="/images/paypal-icons.png" alt="paypal icons"/></div><div class="checkoutbutton right-button"><a href="http://video.f4wonline.com">Subscribe to video!</a></div></div></div>
+                    </div>
+                </div>
+            </div>
+        </div></div>
+        <div class="am-footer">
+        </div>
+                    
+<!-- start of GA code -->
+<script type="text/javascript">
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+</script><script type="text/javascript">
+    ga('create', 'UA-4484679-4', 'auto', {});
+    ga('send', 'pageview');
+        
+</script>
+<!-- end of GA code -->
+</body>
+</html>

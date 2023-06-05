@@ -1,5 +1,5 @@
 import requests
-from util import getHTTPParameters, createPodcastURL, createPodcastPath
+from util import getHTTPParameters, createPodcastURL, createPodcastPath, getPodcastData
 import sys
 
 
@@ -14,14 +14,8 @@ def main():
     podcastURL = createPodcastURL(showDate, showName)
     podcastPath = createPodcastPath('', showDate, showName)
 
-    result = requests.get(url=podcastURL, headers=getHTTPParameters())
+    getPodcastData(podcastURL, podcastPath)
 
-    print('response: ', result.status_code)
-
-    if result.status_code == 200:
-        print('managed to get podcast!')
-        with open(podcastPath, 'wb') as f:
-            f.write(result.content)
 
 
 if __name__ == "__main__":

@@ -11,14 +11,15 @@ def getHTTPParameters():
     }
 
 
-def getPodcastData(url, headers):
+def getPodcastData(podcastURL, podcastPath):
     print('Fetching Podcast from F4W Archive')
-    result = requests.get(url=url, headers=headers)
+    result = requests.get(url=podcastURL, headers=getHTTPParameters())
+
+    print('response: ', result.status_code)
 
     if result.status_code == 200:
-        print('managed to get podcast!')
-
-    return requests
+        with open(podcastPath, 'wb') as f:
+            f.write(result.content)
 
 
 def baseURL():
