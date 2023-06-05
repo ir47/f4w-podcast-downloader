@@ -1,18 +1,27 @@
 import requests
-from util import getHTTPParameters
+from util import getHTTPParameters, createPodcastURL, createPodcastPath
+import sys
+
 
 def main():
     print('Running Downloader')
 
-    result = requests.get(url='https://media001.f4wonline.com/dmdocuments/052723wol.mp3', headers=getHTTPParameters())
+    args = sys.argv
+
+    showDate = args[1]
+    showName = args[2]
+
+    podcastURL = createPodcastURL(showDate, showName)
+    podcastPath = createPodcastPath('', showDate, showName)
+
+    result = requests.get(url=podcastURL, headers=getHTTPParameters())
 
     print('response: ', result.status_code)
 
     if result.status_code == 200:
         print('managed to get podcast!')
-        with open('podcast.mp3', 'wb') as f:
+        with open(podcastPath, 'wb') as f:
             f.write(result.content)
-
 
 
 if __name__ == "__main__":
