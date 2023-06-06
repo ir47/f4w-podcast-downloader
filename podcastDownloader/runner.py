@@ -1,5 +1,5 @@
 import requests
-from util import getHTTPParameters, createPodcastURL, createPodcastPath, getPodcastData
+from util import create_download_url, create_download_file_path, download_podcast_data
 import sys
 
 
@@ -8,14 +8,13 @@ def main():
 
     args = sys.argv
 
-    showDate = args[1]
-    showName = args[2]
+    show_date = args[1]
+    show_name = args[2]
 
-    podcastURL = createPodcastURL(showDate, showName)
-    podcastPath = createPodcastPath('', showDate, showName)
+    podcast_url = create_download_url(show_date, show_name)
+    podcast_path = create_download_file_path('', show_date, show_name)
 
-    getPodcastData(podcastURL, podcastPath)
-
+    download_podcast_data(podcast_url, podcast_path)
 
 
 if __name__ == "__main__":
