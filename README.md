@@ -11,3 +11,8 @@ Goals of the Project:
   - Take in the podcast name and date range that is to be downloaded
   - Use a HTTP Request to download each of the podcasts
   - Store the downloaded podcasts in a passed in folder structure, either by date e.g. a new folder for each week, month or year 
+
+Future Ideas:
+  - Front end to enter information 
+  - Ability to add in words to look for in a title to selectivley download episodes
+  - Ability to select which podcasts to download in a range
