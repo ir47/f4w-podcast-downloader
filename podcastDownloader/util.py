@@ -4,16 +4,16 @@ import requests
 
 def http_request_parameters():
     return {
-        'authority': 'consent.cookiebot.com',
+        'authority': 'media001.f4wonline.com',
+        'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
         'cache-control': 'no-cache',
         'referer': 'https://archive.f4wonline.com/',
-        'Cookie': cookie,
     }
 
 
 def download_podcast_data(podcast_url, podcast_file_path):
     print('Fetching Podcast from F4W Archive')
-    result = requests.get(url=podcast_url, headers=http_request_parameters())
+    result = requests.get(url=podcast_url, headers=http_request_parameters(), cookies=cookie)
 
     print('response: ', result.status_code)
 
@@ -37,6 +37,9 @@ def convert_show_name(show_name):
     show_mappings = show_name_mappings()
 
     converted_show_name = show_mappings.get(show_name.upper())
+
+    if converted_show_name is None:
+        return show_name
 
     return converted_show_name
 

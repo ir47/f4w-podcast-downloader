@@ -1,6 +1,6 @@
-from util import create_download_url, create_download_file_path, download_podcast_data
-import sys
 import argparse
+
+from util import create_download_url, create_download_file_path, download_podcast_data
 
 
 def main():
