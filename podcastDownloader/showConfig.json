@@ -1,0 +1,89 @@
+{
+  "AFTER DARK": {
+    "episode_indicator": "MMddyy",
+    "ep_name": "[ep_ind]dkd"
+  },
+  "BRYAN & VINNY SHOW": {
+    "episode_indicator": "MMddyy",
+    "ep_format": "[ep_ind]bvshow"
+  },
+  "DR KEITH": {
+    "episode_indicator": "MMddyy",
+    "ep_format": "[ep_ind]dks"
+  },
+  "DRAGON KING": {
+    "episode_indicator": "MMddyy",
+    "ep_format": "[ep_ind]ks",
+    "iterable": true
+  },
+  "FIGURE FOUR DAILY LANCE": {
+    "episode_indicator": "MMddyy",
+    "ep_format": "[ep_ind]lance",
+    "iterable": true
+  },
+  "FILTHY FOUR DAILY": {
+    "episode_indicator": "ddMMyy",
+    "ep_format": "[ep_ind]filthy",
+    "iterable": true
+  },
+  "LEFT MY WALLET": {
+    "episode_indicator": "show_name",
+    "ep_format": "leftmywallet[ep_ind]",
+    "iterable": false
+  },
+  "MAT MEN": {
+    "episode_indicator": "ep_number",
+    "ep_format": "matmen[ep_ind]",
+    "iterable": true
+  },
+  "PACIFIC RIM": {
+    "episode_indicator": "title",
+    "ep_format": "prw[ep_ind]",
+    "iterable": false
+  },
+  "JNPO": {
+    "episode_indicator": "ep_number",
+    "ep_format": "jnpo[ep_ind]final",
+    "iterable": true
+  },
+  "SPEAK NOW": {
+    "episode_indicator": "MMMMyy",
+    "ep_format": "speaknow[ep_ind]",
+    "iterable": false
+  },
+  "BIG AUDIO NIGHTMARE": {
+    "episode_indicator": "MMddyy",
+    "ep_format": "[ep_ind]am",
+    "iterable": true
+  },
+  "FIGHT GAME": {
+    "episode_indicator": "MMddyy",
+    "ep_format": "FGP[ep_ind]",
+    "iterable": true
+  },
+  "TOUGH TALK": {
+    "episode_indicator": "MMddyy",
+    "ep_format": "[ep_ind]tt",
+    "iterable": true
+  },
+  "WERE LIVE PAL": {
+    "episode_indicator": "ep_number",
+    "ep_format": "wlp[ep_ind]",
+    "iterable": true
+  },
+  "WRESTLING OBSERVER LIVE": {
+    "episode_indicator": "MMddyy",
+    "ep_format": "[ep_ind]wol",
+    "iterable": true
+  },
+  "WRESTLING OBSERVER RADIO": {
+    "episode_indicator": "MMddyy",
+    "ep_format": "[ep_ind]wo",
+    "iterable": true
+  },
+  "WRESTLING WEEKLY": {
+    "episode_indicator": "MMddyy",
+    "ep_format": "[ep_ind]ww",
+    "iterable": true
+  }
+}

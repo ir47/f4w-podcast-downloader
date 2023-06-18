@@ -1,5 +1,6 @@
 from cookieStore import cookie
 import requests
+import json
 
 
 def http_request_parameters():
@@ -44,30 +45,12 @@ def convert_show_name(show_name):
     return converted_show_name
 
 
-def show_name_mappings():
+def show_name_mappings(file_path='showConfig.json'):
     # TODO Add in handling of Best of Year FFD
-    # TODO Add in handling for different date formatting and None shows
-    return {
-        'AFTER DARK': 'dkd',
-        'BRYAN & VINNY SHOW': 'bvshow',
-        'DR KEITH': 'dks',
-        'DRAGON KING': 'ks',
-        'FIGURE FOUR DAILY LANCE': 'lance',
-        'FILTHY FOUR DAILY': 'filthy',
-        'LEFT MY WALLET': None,
-        'MAT MEN': 'matmen',
-        'PACIFIC RIM': None,
-        'JNPO': 'jnpo',
-        'SPEAK NOW': 'speaknow', #format MMMMdd
-        'BIG AUDIO NIGHTMARE': 'am', #format mmddyy show name
-        'FIGHT GAME': 'FGP',
-        'TOUGH TALK': 'tt', #format mmddyy show name
-        'WERE LIVE PAL': 'wlp', #format show name ep number
-        'WRESTLING OBSERVER LIVE': 'wol',
-        'WRESTLING OBSERVER RADIO': 'wo', #format mmddyy show name
-        'WRESTLING WEEKLY': 'ww', #format mmddyy show name
-
-    }
+    # TODO Add in way for user to add / change this mapping
+    with open(file_path, 'r') as f:
+        data = json.load(f)
+        return data
 
 
 def default_download_url():
