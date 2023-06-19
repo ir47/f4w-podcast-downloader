@@ -1,89 +1,110 @@
 {
   "AFTER DARK": {
-    "episode_indicator": "MMddyy",
-    "ep_name": "[ep_ind]dkd"
+    "ep_name_format": "[ep_indicator]dkd",
+    "ep_indicator_type": "date",
+    "ep_indicator_format": "MMddyy",
+    "iterable": true
   },
   "BRYAN & VINNY SHOW": {
-    "episode_indicator": "MMddyy",
-    "ep_format": "[ep_ind]bvshow"
+    "ep_name_format": "[ep_indicator]bvshow",
+    "ep_indicator_type": "date",
+    "ep_indicator_format": "MMddyy",
+    "iterable": true
   },
   "DR KEITH": {
-    "episode_indicator": "MMddyy",
-    "ep_format": "[ep_ind]dks"
+    "ep_name_format": "[ep_indicator]dks",
+    "ep_indicator_type": "date",
+    "ep_indicator_format": "MMddyy",
+    "iterable": true
   },
   "DRAGON KING": {
-    "episode_indicator": "MMddyy",
-    "ep_format": "[ep_ind]ks",
+    "ep_name_format": "[ep_indicator]ks",
+    "ep_indicator_type": "date",
+    "ep_indicator_format": "MMddyy",
     "iterable": true
   },
   "FIGURE FOUR DAILY LANCE": {
-    "episode_indicator": "MMddyy",
-    "ep_format": "[ep_ind]lance",
+    "ep_name_format": "[ep_indicator]lance",
+    "ep_indicator_type": "date",
+    "ep_indicator_format": "MMddyy",
     "iterable": true
   },
   "FILTHY FOUR DAILY": {
-    "episode_indicator": "ddMMyy",
-    "ep_format": "[ep_ind]filthy",
+    "ep_name_format": "[ep_indicator]filthy",
+    "ep_indicator_type": "date",
+    "ep_indicator_format": "ddMMyy",
     "iterable": true
   },
   "LEFT MY WALLET": {
-    "episode_indicator": "show_name",
-    "ep_format": "leftmywallet[ep_ind]",
+    "ep_name_format": "leftmywallet[ep_indicator]",
+    "ep_indicator_type": "show_name",
+    "ep_indicator_format": "title",
     "iterable": false
   },
   "MAT MEN": {
-    "episode_indicator": "ep_number",
-    "ep_format": "matmen[ep_ind]",
+    "ep_name_format": "matmen[ep_indicator]",
+    "ep_indicator_type": "ep_number",
+    "ep_indicator_format": "000",
     "iterable": true
   },
   "PACIFIC RIM": {
-    "episode_indicator": "title",
-    "ep_format": "prw[ep_ind]",
+    "ep_name_format": "prw[ep_indicator]",
+    "ep_indicator_type": "show_name",
+    "ep_indicator_format": "title",
     "iterable": false
   },
   "JNPO": {
-    "episode_indicator": "ep_number",
-    "ep_format": "jnpo[ep_ind]final",
+    "ep_name_format": "jnpo[ep_indicator]final",
+    "ep_indicator_type": "ep_number",
+    "ep_indicator_format": "000",
     "iterable": true
   },
   "SPEAK NOW": {
-    "episode_indicator": "MMMMyy",
-    "ep_format": "speaknow[ep_ind]",
+    "ep_name_format": "speaknow[ep_indicator]",
+    "ep_indicator_type": "ep_number",
+    "ep_indicator_format": "000",
     "iterable": false
   },
   "BIG AUDIO NIGHTMARE": {
-    "episode_indicator": "MMddyy",
-    "ep_format": "[ep_ind]am",
+    "ep_name_format": "[ep_indicator]am",
+    "ep_indicator_type": "date",
+    "ep_indicator_format": "MMddyy",
     "iterable": true
   },
   "FIGHT GAME": {
-    "episode_indicator": "MMddyy",
-    "ep_format": "FGP[ep_ind]",
+    "ep_name_format": "FGP[ep_indicator]",
+    "ep_indicator_type": "date",
+    "ep_indicator_format": "MMddyy",
     "iterable": true
   },
   "TOUGH TALK": {
-    "episode_indicator": "MMddyy",
-    "ep_format": "[ep_ind]tt",
+    "ep_name_format": "[ep_indicator]tt",
+    "ep_indicator_type": "date",
+    "ep_indicator_format": "MMddyy",
     "iterable": true
   },
   "WERE LIVE PAL": {
-    "episode_indicator": "ep_number",
-    "ep_format": "wlp[ep_ind]",
+    "ep_name_format": "wlp[ep_indicator]",
+    "ep_indicator_type": "ep_number",
+    "ep_indicator_format": "000",
     "iterable": true
   },
   "WRESTLING OBSERVER LIVE": {
-    "episode_indicator": "MMddyy",
-    "ep_format": "[ep_ind]wol",
+    "ep_name_format": "[ep_indicator]wol",
+    "ep_indicator_type": "date",
+    "ep_indicator_format": "MMddyy",
     "iterable": true
   },
   "WRESTLING OBSERVER RADIO": {
-    "episode_indicator": "MMddyy",
-    "ep_format": "[ep_ind]wo",
+    "ep_name_format": "[ep_indicator]wo",
+    "ep_indicator_type": "date",
+    "ep_indicator_format": "MMddyy",
     "iterable": true
   },
   "WRESTLING WEEKLY": {
-    "episode_indicator": "MMddyy",
-    "ep_format": "[ep_ind]ww",
+    "ep_name_format": "[ep_indicator]ww",
+    "ep_indicator_type": "date",
+    "ep_indicator_format": "MMddyy",
     "iterable": true
   }
 }

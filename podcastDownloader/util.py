@@ -1,6 +1,5 @@
 from cookieStore import cookie
 import requests
-import json
 
 
 def http_request_parameters():
@@ -23,34 +22,21 @@ def download_podcast_data(podcast_url, podcast_file_path):
             f.write(result.content)
 
 
-def create_download_url(show_date, show_name, base_download_url=None):
+def create_download_url(show_name, episode_indicator, prefix_indicator=True, file_format='.mp3',
+                        base_download_url=None):
     if base_download_url is None:
         base_download_url = default_download_url()
 
-    return base_download_url + show_date + show_name + '.mp3'
+    if prefix_indicator:
+        file_name = episode_indicator + show_name + file_format
+    else:
+        file_name = show_name + episode_indicator + file_format
+
+    return base_download_url + file_name
 
 
 def create_download_file_path(path, show_date, show_name):
     return path + show_date + show_name + '.mp3'
-
-
-def convert_show_name(show_name):
-    show_mappings = show_name_mappings()
-
-    converted_show_name = show_mappings.get(show_name.upper())
-
-    if converted_show_name is None:
-        return show_name
-
-    return converted_show_name
-
-
-def show_name_mappings(file_path='showConfig.json'):
-    # TODO Add in handling of Best of Year FFD
-    # TODO Add in way for user to add / change this mapping
-    with open(file_path, 'r') as f:
-        data = json.load(f)
-        return data
 
 
 def default_download_url():
