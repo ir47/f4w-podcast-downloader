@@ -216,3 +216,6 @@ fabric.properties
 
 # masOS system file
 .DS_Store
+
+# cookie store file
+podcastDownloader/cookieStore.py
