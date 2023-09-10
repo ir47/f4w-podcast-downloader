@@ -1,5 +1,6 @@
 from cookieStore import cookie
 import requests
+from pathlib import Path
 
 
 def http_request_parameters():
@@ -22,6 +23,21 @@ def download_podcast_data(podcast_url, podcast_file_path):
             f.write(result.content)
 
 
+def generate_download_directories(path):
+    try:
+        path = Path(path)
+        path.mkdir(parents=True, exist_ok=True)
+        return True
+
+    except OSError:
+        print("Could not create directory structor. Defaulting to Downloads folder")
+        return False
+
+
+def default_download_path():
+    return str(Path.home() / "Downloads")
+
+
 def create_download_url(show_name, episode_indicator, prefix_indicator=True, file_format='.mp3',
                         base_download_url=None):
     if base_download_url is None:
@@ -35,7 +51,7 @@ def create_download_url(show_name, episode_indicator, prefix_indicator=True, fil
     return base_download_url + file_name
 
 
-def create_download_file_path(path, show_date, show_name):
+def create_download_file_name(path, show_date, show_name):
     return path + show_date + show_name + '.mp3'
 
 
