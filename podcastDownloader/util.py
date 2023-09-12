@@ -35,7 +35,7 @@ def generate_download_directories(path):
 
 
 def default_download_path():
-    return str(Path.home() / "Downloads")
+    return str(Path.home()) + "/Downloads/"
 
 
 def create_download_url(show_name, episode_indicator, prefix_indicator=True, file_format='.mp3',
