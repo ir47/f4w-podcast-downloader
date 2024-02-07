@@ -1,4 +1,4 @@
-# F4WPodcastMassDownloader
+# f4w-podcast-downloader
 Python script to download multiple podcasts from the F4W Online archive. 
 
 
