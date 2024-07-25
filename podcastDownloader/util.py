@@ -60,22 +60,8 @@ def create_download_url(show_name, episode_indicator, prefix_indicator=True, fil
 
 
 def create_download_file_name(path, show_date, show_name):
-    return path + show_date + show_name + '.mp3'
+    return path + str(show_date) + show_name + '.mp3'
 
 
 def default_download_url():
     return 'https://media001.f4wonline.com/dmdocuments/'
-
-
-def user_auth_url():
-    return 'https://account.f4wonline.com/login'
-
-
-def create_request_cookie(cookies):
-    cookie_string = ''
-
-    for cookie in cookies:
-        cookie_string += cookie.name + '=' + cookie.value + ';'
-
-    print(cookie_string)
-    return cookie_string

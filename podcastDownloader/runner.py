@@ -15,8 +15,6 @@ def main():
     parser.add_argument('-s', '--start', required=True, type=str, help='Starting podcast value')
     parser.add_argument('-o', '--output', required=False, type=str, default=None, help='Podcast download path')
     parser.add_argument('-e', '--end', required=False, type=str, default=None, help='End value of podcasts to download')
-    parser.add_argument('-i', '--increments', required=False, type=int, default=0,
-                        help='Interval range between podcast episodes')
     parser.add_argument('-m', '--monthlyFolder', required=False, type=bool, default=True,
                         help='Create new folder for each month')
     parser.add_argument('-y', '--yearlyFolder', required=False, type=bool, default=True,
@@ -49,7 +47,6 @@ def main():
     download_path = args.get("output")
 
     show_end_date = args.get("end")
-    show_interval = args.get("interval")
 
     monthly_folder = args.get("monthlyFolder")
     yearly_folder = args.get("yearlyFolder")
