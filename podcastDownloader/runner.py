@@ -1,104 +1,299 @@
+"""
+runner.py — F4WOnline Podcast Downloader
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Entry point and CLI for downloading F4WOnline podcasts.
+
+Scrapes each show's WordPress category archive to discover episodes, visits
+individual episode pages to extract the direct MP3 download link, downloads
+the files into an organised folder hierarchy, and embeds ID3 metadata tags.
+
+Usage examples
+--------------
+# Download all Wrestling Observer Radio episodes:
+python runner.py --show wrestling-observer-radio
+
+# Dry run — see what would be downloaded without downloading anything:
+python runner.py --show wrestling-observer-radio --max-pages 1 --dry-run
+
+# Download a specific show between two dates:
+python runner.py --show bryan-and-vinny-show --start "January 1, 2025" --end "March 17, 2026"
+
+# Download all shows to a custom folder without monthly sub-folders:
+python runner.py --all --output ~/Podcasts --no-monthly
+
+# Re-download episodes that already exist on disk:
+python runner.py --show after-dark --overwrite
+"""
+
+from __future__ import annotations
+
 import argparse
-from datetime import datetime, timedelta
+import sys
+import time
+from datetime import datetime
+from pathlib import Path
 
-from util import create_download_url, create_download_file_name, download_podcast_data, generate_download_directories, \
-    default_download_path, get_user_cookies
+from util import (
+    DATE_FORMAT_IN,
+    DEFAULT_DOWNLOAD_PATH,
+    SHOW_SLUGS,
+    build_download_path,
+    create_session,
+    download_podcast,
+    enrich_episode,
+    generate_download_directories,
+    login,
+    sanitize_filename,
+    scrape_all_episodes,
+    scrape_episode_details,
+    write_id3_tags,
+)
 
 
-def main():
-    print('Running Downloader')
+# ---------------------------------------------------------------------------
+# CLI
+# ---------------------------------------------------------------------------
 
-    parser = argparse.ArgumentParser(description='F4W Podcast Downloader')
+def _build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        description="F4WOnline Podcast Downloader",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=__doc__,
+    )
 
-    # TODO Update interval argument to allow for days of the week
-    parser.add_argument('-n', '--name', required=True, type=str, help='Show name of Podcast to be downloaded')
-    parser.add_argument('-s', '--start', required=True, type=str, help='Starting podcast value')
-    parser.add_argument('-o', '--output', required=False, type=str, default=None, help='Podcast download path')
-    parser.add_argument('-e', '--end', required=False, type=str, default=None, help='End value of podcasts to download')
-    parser.add_argument('-m', '--monthlyFolder', required=False, type=bool, default=True,
-                        help='Create new folder for each month')
-    parser.add_argument('-y', '--yearlyFolder', required=False, type=bool, default=True,
-                        help='Create new folder for each year')
-    # TODO Make this only one of 2 values possibly prefix true or false
-    parser.add_argument('-f', '--format', required=False, type=str, default='prefix',
-                        help='Should the episode indicator be before or after the episode name')
-    parser.add_argument('-cp', '--configPath', required=False, type=str,
-                        default=None,
-                        help='Path to config file with podcast information')
+    target = parser.add_mutually_exclusive_group(required=True)
+    target.add_argument(
+        "--show", "-s",
+        metavar="SHOW_SLUG",
+        help=(
+            "Slug of the show to download, e.g. 'wrestling-observer-radio'. "
+            "Run with --list-shows to see all valid slugs."
+        ),
+    )
+    target.add_argument(
+        "--all", "-A",
+        action="store_true",
+        help="Download every episode from every show.",
+    )
+    target.add_argument(
+        "--list-shows",
+        action="store_true",
+        help="Print all available show slugs and exit.",
+    )
 
-    args = vars(parser.parse_args())
+    parser.add_argument(
+        "--output", "-o",
+        metavar="PATH",
+        default=None,
+        help=f"Root download directory (default: {DEFAULT_DOWNLOAD_PATH}).",
+    )
+    parser.add_argument(
+        "--start",
+        metavar="DATE",
+        default=None,
+        help="Only download episodes on or after this date, e.g. 'January 1, 2025'.",
+    )
+    parser.add_argument(
+        "--end",
+        metavar="DATE",
+        default=None,
+        help="Only download episodes on or before this date, e.g. 'March 17, 2026'.",
+    )
+    parser.add_argument(
+        "--max-pages",
+        metavar="N",
+        type=int,
+        default=None,
+        help="Limit pages scraped per show (useful for testing).",
+    )
+    parser.add_argument(
+        "--no-yearly",
+        action="store_true",
+        help="Don't create per-year sub-folders.",
+    )
+    parser.add_argument(
+        "--no-monthly",
+        action="store_true",
+        help="Don't create per-month sub-folders.",
+    )
+    parser.add_argument(
+        "--page-delay",
+        metavar="SECONDS",
+        type=float,
+        default=1.0,
+        help="Seconds to sleep between index page requests (default: 1.0).",
+    )
+    parser.add_argument(
+        "--episode-delay",
+        metavar="SECONDS",
+        type=float,
+        default=0.5,
+        help="Seconds to sleep between individual episode requests (default: 0.5).",
+    )
+    parser.add_argument(
+        "--overwrite",
+        action="store_true",
+        help="Re-download episodes that already exist on disk.",
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Print what would be downloaded without actually downloading.",
+    )
 
-    user_cookies = get_user_cookies()
+    return parser
 
-    if not user_cookies:
-        print('Could not get cookie data please login to F4WOnline in your browser before continuing.')
+
+# ---------------------------------------------------------------------------
+# Date filtering
+# ---------------------------------------------------------------------------
+
+def _parse_date_arg(value: str | None) -> datetime | None:
+    """Parse a CLI date string. Exits with an error message on bad input."""
+    if not value:
+        return None
+    try:
+        return datetime.strptime(value, DATE_FORMAT_IN)
+    except ValueError:
+        print(f"[error] Could not parse date '{value}'. Expected format: 'January 1, 2025'.")
+        sys.exit(1)
+
+
+def _in_date_range(episode: dict, start: datetime | None, end: datetime | None) -> bool:
+    """Return True if the episode falls within the given date range."""
+    dt = episode.get("datetime")
+    if dt is None:
+        return True  # can't determine date — include by default
+    if start and dt < start:
+        return False
+    if end and dt > end:
+        return False
+    return True
+
+
+# ---------------------------------------------------------------------------
+# Show listing
+# ---------------------------------------------------------------------------
+
+def _print_show_list() -> None:
+    """Print all known show slugs and their display names."""
+    print("Available shows:\n")
+    for slug, name in SHOW_SLUGS.items():
+        print(f"  {slug:<45} {name}")
+    print()
+
+
+# ---------------------------------------------------------------------------
+# Download workflow
+# ---------------------------------------------------------------------------
+
+def _run_downloads(args: argparse.Namespace) -> None:
+    # --- Auth ---
+    session = create_session()
+    if not login(session):
+        print(
+            "\n[error] Could not log in to F4WOnline.\n"
+            "Please check your credentials and that your subscription is active.\n"
+            "You can reset your password at: https://account.f4wonline.com/login?sendpass"
+        )
+        sys.exit(1)
+
+    # --- Config ---
+    output_root = Path(args.output) if args.output else DEFAULT_DOWNLOAD_PATH
+    start_date = _parse_date_arg(args.start)
+    end_date = _parse_date_arg(args.end)
+    yearly = not args.no_yearly
+    monthly = not args.no_monthly
+
+    # --- Show slug validation ---
+    show_filter = args.show if not args.all else None
+    if show_filter and show_filter not in SHOW_SLUGS:
+        print(f"[warn] '{show_filter}' is not a recognised show slug.")
+        _print_show_list()
+        print("Continuing anyway — will scrape any category URL containing that value.\n")
+
+    # --- Scrape episode index ---
+    episodes = scrape_all_episodes(
+        session,
+        show_filter=show_filter,
+        max_pages=args.max_pages,
+        page_delay=args.page_delay,
+    )
+
+    if not episodes:
+        print("[warn] No episodes found. Check your --show value or network connection.")
         return
 
-    if args:
-        print('Displaying Output as: % s' % args)
+    # --- Enrich dates and apply date range filter ---
+    episodes = [enrich_episode(ep) for ep in episodes]
+    episodes = [ep for ep in episodes if _in_date_range(ep, start_date, end_date)]
+    print(f"{len(episodes)} episode(s) after date filtering.")
 
-    if args.get('configPath'):
-        # TODO get podcast info from config
-        print('Feature to be implemented')
+    # --- Dry run ---
+    if args.dry_run:
+        print("\n--- DRY RUN: episodes that would be downloaded ---")
+        for ep in episodes:
+            folder = build_download_path(output_root, ep, yearly, monthly)
+            filename = f"{ep.get('day', '00')}-{sanitize_filename(ep['title'])}.mp3"
+            print(f"  {folder / filename}")
         return
 
-    show_name = args.get("name")
-    show_start_date = args.get("start")
-    download_path = args.get("output")
+    # --- Download loop ---
+    success, skipped, failed = 0, 0, 0
 
-    show_end_date = args.get("end")
+    for i, episode in enumerate(episodes, 1):
+        print(f"\n[{i}/{len(episodes)}] {episode['title']} ({episode['date']})")
 
-    monthly_folder = args.get("monthlyFolder")
-    yearly_folder = args.get("yearlyFolder")
+        details = scrape_episode_details(episode["url"], session)
 
-    podcast_downloader(show_name, show_start_date, show_end_date, download_path, monthly_folder, yearly_folder,
-                       user_cookies)
+        if not details["mp3_url"]:
+            print(f"  [fail] Could not find MP3 link on {episode['url']}")
+            failed += 1
+            continue
 
+        folder = build_download_path(output_root, episode, yearly, monthly)
+        generate_download_directories(folder)
+        filename = f"{episode.get('day', '00')}-{sanitize_filename(episode['title'])}.mp3"
+        dest = folder / filename
 
-def podcast_downloader(show_name, show_start_date, show_end_date, download_path, monthly_folder, yearly_folder,
-                       user_cookie, date_format='%m%d%y'):
-    start_date = datetime.strptime(show_start_date, date_format)
-    end_date = datetime.strptime(show_end_date, date_format)
+        if dest.exists() and not args.overwrite:
+            print(f"  [skip] Already exists: {dest.name}")
+            skipped += 1
+            time.sleep(args.episode_delay)
+            continue
 
-    delta = timedelta(days=1)
+        downloaded = download_podcast(details["mp3_url"], dest, session=session, skip_existing=False)
 
-    if yearly_folder:
-        download_path += start_date.strftime('%Y') + '/'
+        if not downloaded or dest.stat().st_size == 0:
+            failed += 1
+        else:
+            track_num = int(episode.get("day", 0)) or None
+            write_id3_tags(dest, episode, details, track_number=track_num)
+            success += 1
 
-    if monthly_folder:
-        download_path += start_date.strftime('%B') + '/'
+        time.sleep(args.episode_delay)
 
-    print('Download Path: ', download_path)
-
-    if download_path is None or not generate_download_directories(download_path):
-        download_path = default_download_path()
-
-    while start_date <= end_date:
-        print('Podcast Date: ', start_date)
-
-        podcast_url = create_download_url(show_name, show_start_date)
-        print('Podcast URL: ', podcast_url)
-        podcast_file_name = create_download_file_name(download_path, show_start_date, show_name)
-
-        download_podcast_data(podcast_url, podcast_file_name, user_cookie)
-
-        previous_date = start_date
-
-        start_date += delta
-
-        if yearly_folder and previous_date.year != start_date.year:
-            new_download_path = download_path.split(previous_date.strftime('%Y'))[0]
-
-            download_path = new_download_path + start_date.strftime('%Y') + '/'
-
-        if monthly_folder and previous_date.month != start_date.month:
-            new_download_path = download_path.split(previous_date.strftime('%B'))[0]
-
-            download_path = new_download_path + start_date.strftime('%B') + '/'
-
-        generate_download_directories(download_path)
-        show_start_date = start_date.strftime(date_format)
+    # --- Summary ---
+    print(f"\n{'=' * 50}")
+    print(f"Done.  Downloaded: {success}  |  Skipped: {skipped}  |  Failed: {failed}")
+    print(f"Files saved to: {output_root}")
 
 
-if __name__ == '__main__':
+# ---------------------------------------------------------------------------
+# Entry point
+# ---------------------------------------------------------------------------
+
+def main() -> None:
+    print("=== F4WOnline Podcast Downloader ===\n")
+    parser = _build_parser()
+    args = parser.parse_args()
+
+    if args.list_shows:
+        _print_show_list()
+        sys.exit(0)
+
+    _run_downloads(args)
+
+
+if __name__ == "__main__":
     main()
