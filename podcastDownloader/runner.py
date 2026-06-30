@@ -33,7 +33,7 @@ import time
 from datetime import datetime
 from pathlib import Path
 
-from util import (
+from podcastDownloader.util import (
     DATE_FORMAT_IN,
     DEFAULT_DOWNLOAD_PATH,
     SHOW_SLUGS,
